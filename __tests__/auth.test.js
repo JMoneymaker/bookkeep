@@ -22,12 +22,12 @@ describe('auth routes', () => {
   it('can signup a user with email and password', () => {
     return request(app)
       .post('/api/v1/auth/signup')
-      .send({ email: 'testing@test.com', password: 'password' })
+      .send({ email: 'signup@test.com', password: 'password' })
       .then(res => {
         expect(res.header['set-cookie'][0]).toEqual(expect.stringContaining('session='));
         expect(res.body).toEqual({
           _id: expect.any(String),
-          email: 'testing@test.com',
+          email: 'signup@test.com',
           __v: 0
         });
       });
@@ -35,18 +35,18 @@ describe('auth routes', () => {
 	
   it('can login a user with an email and password', async() => {
     const user = await User.create({
-      email: 'testing@test.com',
+      email: 'login@test.com',
       password: 'password'
     });
 
     return request(app)
       .post('/api/v1/auth/login')
-      .send({ email: 'testing@test.com', password: 'password' })
+      .send({ email: 'login@test.com', password: 'password' })
       .then(res => {
         expect(res.header['set-cookie'][0]).toEqual(expect.stringContaining('session='));
         expect(res.body).toEqual({
           _id: user.id,
-          email: 'testing@test.com',
+          email: 'login@test.com',
           __v: 0
         });
       });
@@ -54,7 +54,7 @@ describe('auth routes', () => {
 	
   it('will not log in a user with a bad email', async() => {
     await User.create({
-      email: 'testing@test.com',
+      email: 'check-email@test.com',
       password: 'password'
     });
 
@@ -72,13 +72,13 @@ describe('auth routes', () => {
 	
   it('will not log in a user with a bad password', async() => {
     await User.create({
-      email: 'testing@test.com',
+      email: 'check-password@test.com',
       password: 'password'
     });
 
     return request(app)
       .post('/api/v1/auth/login')
-      .send({ email: 'testing@test.com', password: 'wrongPassword' })
+      .send({ email: 'check-password@test.com', password: 'wrongPassword' })
       .then(res => {
         expect(res.status).toEqual(401);
         expect(res.body).toEqual({
@@ -90,7 +90,7 @@ describe('auth routes', () => {
 	
   it('can verify if a user is logged in', async() => {
     const user = await User.create({
-      email: 'test@test.com',
+      email: 'verify-login@test.com',
       password: 'password'
     });
 
@@ -98,14 +98,14 @@ describe('auth routes', () => {
 
     await agent
       .post('/api/v1/auth/login')
-      .send({ email: 'test@test.com', password: 'password' });
+      .send({ email: 'verify-login@test.com', password: 'password' });
 
     return agent
       .get('/api/v1/auth/verify')
       .then(res => {
         expect(res.body).toEqual({
           _id: user.id,
-          email: 'test@test.com',
+          email: 'verify-login@test.com',
           __v: 0
         });
       });
