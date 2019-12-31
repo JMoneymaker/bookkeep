@@ -16,86 +16,136 @@ describe('app routes', () => {
   });
 
   let book;
-  let user;
 
   beforeEach(async() => {
-    user = await User.create({
-      email: 'test@testing.com',
-      password: 'password'
-    });
-    book = await Book.create({
-      readingList: user._id,
-      title: 'Fledgling',
-      addDate: '2019-12-30',
-      author: 'Octavia Butler',
-      genre: 'Sci-Fi/Fantasy'
-    });
+    book = await Book
+      .create({
+        title: 'Fledgling',
+        addDate: '2019-12-30',
+        author: 'Octavia Butler',
+        genre: ['Sci-Fi/Fantasy']
+      });
   });
-
+  
   afterAll(() => {
     return mongoose.connection.close();
   });
-  
-  it('creates a book', async() => {
-    await User.create({ email: 'createOneTest@testing.com', password: 'password' });
 
+  it('creates a book', async() => {
+    await User.create({ 
+      email: 'createOneTest@testing.com', 
+      password: 'password' });
+    
     const agent = request.agent(app);
 
     await agent
       .post('/api/v1/auth/login')
-      .send({ email: 'createOneTest@testing.com', password: 'password' });
+      .send({ 
+        email: 'createOneTest@testing.com', 
+        password: 'password' });
 
     return agent
       .post('/api/v1/books')
       .send({
-        readingList: user._id,
-        title: 'Fledgling',
+        title: 'Lilith\'s Brood',
         addDate: '2019-12-30',
         author: 'Octavia Butler',
-        genre: 'Sci-Fi/Fantasy'
+        genre: ['Sci-Fi/Fantasy']
       })
       .then(res => {
         expect(res.body).toEqual({
           _id: expect.any(String),
-          title: 'Fledgling',
+          title: 'Lilith\'s Brood',
           addDate: expect.any(String),
           author: 'Octavia Butler',
-          genre: 'Sci-Fi/Fantasy',
-          readingList: user._id.toString(),
+          genre: ['Sci-Fi/Fantasy'],
           __v: 0
         });
       });
   });
 
   it('finds all books', async() => {
-    const books = await Book.create([
-      {
-        title: 'Parable of the Talents',
-        addDate: '2019-12-30',
-        author: 'Octavia Butler',
-        genre: 'Sci-Fi/Fantasy',
-        readingList: user._id,
-      },
-      {
-        title: 'Parable of the Sower',
-        addDate: '2019-12-30',
-        author: 'Octavia Butler',
-        genre: 'Sci-Fi/Fantasy',
-        readingList: user._id,
-      }
-    ]);
-    const agent = request.agent(app);
-    await agent
-      .post('/api/v1/auth/login')
-      .send({ email: 'test@testing.com', password: 'password' });
-
-    return agent
+    return request(app)
       .get('/api/v1/books')
       .then(res => {
-        books.forEach(book => {
-          expect(res.body).toContainEqual(JSON.parse(JSON.stringify(book)));
+        expect(res.body).toEqual([{
+          _id: expect.any(String),
+          title: 'Fledgling',
+          addDate: expect.any(String),
+          author: 'Octavia Butler',
+          genre: ['Sci-Fi/Fantasy'],
+          __v: 0
+        }]);
+      });
+  });
+
+  it('finds a single book by id', async() => {
+    return request(app)
+      .get(`/api/v1/books/${book._id}`)
+      .then(res => {
+        expect(res.body).toEqual({
+          _id: expect.any(String),
+          title: 'Fledgling',
+          author: 'Octavia Butler',
+          addDate: expect.any(String),
+          genre: ['Sci-Fi/Fantasy'],
+          __v: 0
         });
       });
+  });
+
+  it('updates a book by id', async() => {
+    await User.create({ 
+      email: 'updateOne@testing.com', 
+      password: 'password' });
+    
+    const agent = request.agent(app);
+
+    await agent
+      .post('/api/v1/auth/login')
+      .send({ email: 'updateOne@testing.com', password: 'password' });
+
+    return agent
+      .patch(`/api/v1/books/${book._id}`)
+      .send({ title: 'Bloodchild' })
+      .then(res => {
+        expect(res.body).toEqual({
+          _id: expect.any(String),
+          title: 'Bloodchild',
+          author: 'Octavia Butler',
+          addDate: expect.any(String),
+          genre: ['Sci-Fi/Fantasy'],
+          __v: 0
+        });
+      });
+
+  });
+
+  it('deletes a book by id', async() => {
+    await User.create({ 
+      email: 'deleteOne@testing.com', 
+      password: 'password' });
+    
+    const agent = request.agent(app);
+
+    await agent
+      .post('/api/v1/auth/login')
+      .send({ email: 'deleteOne@testing.com', password: 'password' });
+
+    return agent
+      .patch(`/api/v1/books/${book._id}`)
+      .send({ title: 'Bloodchild' })
+      .then(res => {
+        expect(res.body).toEqual({
+          _id: expect.any(String),
+          title: 'Bloodchild',
+          author: 'Octavia Butler',
+          addDate: expect.any(String),
+          genre: ['Sci-Fi/Fantasy'],
+          __v: 0
+        });
+      });
+
   });
 
   
