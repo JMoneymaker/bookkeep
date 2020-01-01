@@ -18,20 +18,26 @@ class App extends Component {
     const header = new Header();
     dom.prepend(header.renderDOM());
 
-    // const signUpContainer = dom.querySelector('#signup-container');
-    // const logInContainer = dom.querySelector('#login-container');
+    const signUpContainer = dom.querySelector('#signup-container');
+    const logInContainer = dom.querySelector('#login-container');
 
     const signUp = new Signup();
-    dom.appendChild(signUp.renderDOM());
+    signUpContainer.appendChild(signUp.renderDOM());
 
     const logIn = new Login();
-    dom.appendChild(logIn.renderDOM());
+    logInContainer.appendChild(logIn.renderDOM());
 
-    //   const switchToLogIn = dom.querySelector('#login-button');
-    //   switchToLogIn.addEventListener('click', () => {
-    //     logInContainer.classList.remove('no-display');
-    //     signUpContainer.classList.add('no-display');
-    //   });
+    const switchToSignUp = dom.querySelector('#signup-button');
+    switchToSignUp.addEventListener('click', () => {
+      signUpContainer.classList.remove('no-display');
+      logInContainer.classList.add('no-display');
+    });
+
+    const switchToLogIn = dom.querySelector('#login-button');
+    switchToLogIn.addEventListener('click', () => {
+      signUpContainer.classList.add('no-display');
+      logInContainer.classList.remove('no-display');
+    });
 
   }
 
@@ -41,7 +47,7 @@ class App extends Component {
             <!-- header goes here --> 
             <main>
                 <p class="erorrs"></p>
-                <section class="switch">
+                <section class="no-display" id="signup-container">
                   <p class="switch">
                     <button id="login-button">Already a user?</button>
                   </p>

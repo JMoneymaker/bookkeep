@@ -1,6 +1,8 @@
 import Component from '../Component.js';
 import Header from '../common/Header.js';
+import ReadingList from '../bookkeep/ReadingList.js';
 import verifyAuth from '../utils/auth.js';
+import Controls from './Controls.js';
 
 class App extends Component {
   onRender(dom) {
@@ -9,7 +11,10 @@ class App extends Component {
     const header = new Header();
     dom.prepend(header.renderDOM());
 
-    const readingList = new readingList({ books: [] });
+    const controls = new Controls();
+    dom.appendChild(controls.renderDOM());
+    
+    const readingList = new ReadingList({ books: [] });
     dom.appendChild(readingList.renderDOM());
 
     async function loadReadingList() {

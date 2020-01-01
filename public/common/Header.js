@@ -1,16 +1,13 @@
 import Component from '../Component.js';
+import deleteCookie from '../utils/logout.js';
 
 class Header extends Component {
   onRender(dom) {
-    if(localStorage.getItem('USER')) {
-      const button = dom.querySelector('./log-out');
-      button.classList.remove('hidden');
-
-      button.addEventListener('click', () => {
-        localStorage.removeItem('USER');
-        location = './';
+    const logout = dom.querySelector('.log-out');
+    logout
+      .addEventListener('click', () => {
+        deleteCookie('session');
       });
-    }
   }
 
   renderHTML() {
