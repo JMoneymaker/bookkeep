@@ -1,0 +1,81 @@
+@import url('https://fonts.googleapis.com/css?family=Heebo|Oswald');
+
+body {
+    font-family: 'Heebo', "Segoe UI", Candara, "Bitstream Vera Sans", "DejaVu Sans", "Bitstream Vera Sans", "Trebuchet MS", Verdana, "Verdana Ref", sans-serif;
+    background: rgb(236, 229, 238);
+    line-height: 1.5em;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+main {
+    position: relative;
+}
+
+form.standard {
+    width: 100%;
+    margin: 20px auto;
+    padding: 20px 40px 20px 30px;
+    background: whitesmoke;
+    border: 1px solid #aaa;
+}
+
+form.standard p {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+form.standard label, form.standard legend {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    width: 300px;
+}
+
+form.standard input:not([type=checkbox]), form.standard select {
+    width: 100%;
+    height: 35px;
+    font-size: 1.1em;
+}
+
+form.standard input[type=range] {
+    width: calc(100% - 20px);
+    margin-right: 10px;
+}
+
+form.standard input[type=checkbox] {
+    font-size: 1.2em;
+    height: 35px;
+    width: 35px;
+    margin: 0;
+    margin-right: 8px;
+}
+
+label.horizontally-centered, .horizontally-centered {
+    display: flex;
+    align-items: center;
+}
+
+form.standard button {
+    margin-top: 10px;
+    height: 35px;
+    width: 150px;
+    max-width: 100%;
+    font-size: 1.1em;
+    font-weight: bold;
+    border: 1px solid white;
+    background: steelblue;
+    color: white;
+    opacity: 0.9;
+    overflow: hidden;
+}
+
+form.standard button:hover {
+    opacity: 1;
+}
+
+.hidden {
+    display: none;
+}
