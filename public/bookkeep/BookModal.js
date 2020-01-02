@@ -45,7 +45,9 @@ class BookModal extends Component {
                 <input name="read-date" type="date" placeholder="read?">
                 <input name="genre" type="text" placeholder="genre">
                 </fieldset>
-                <button>Add</button>
+                <button type="submit">Add</button>
+                <button type="reset">Reset</button>
+                <button type="button" onClick="window.location.href = '/bookkeep.html';">Cancel</button>
             </form>
         </div>
         `;

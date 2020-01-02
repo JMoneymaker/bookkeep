@@ -5,7 +5,7 @@ class Book extends Component {
     const book = this.props.book;
 
     return /*html*/`
-        <div>
+        <div id="book-container">
         <p>${book.title}</p>
         <p>by ${book.author}</p>
         </div>

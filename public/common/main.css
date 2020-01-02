@@ -2,7 +2,7 @@
 
 body {
     font-family: 'Heebo', "Segoe UI", Candara, "Bitstream Vera Sans", "DejaVu Sans", "Bitstream Vera Sans", "Trebuchet MS", Verdana, "Verdana Ref", sans-serif;
-    background: rgb(236, 229, 238);
+    background: rgb(37,40,53);
     line-height: 1.5em;
 }
 
@@ -10,8 +10,19 @@ body {
     box-sizing: border-box;
 }
 
-main {
+#home-page {
     position: relative;
+    height: 90vh;
+}
+
+#home-page {
+    display: flex;
+    background-image: url(../assets/home-page.jpg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    justify-content: center;
+    align-items: center;
 }
 
 form.standard {

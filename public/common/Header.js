@@ -3,7 +3,18 @@ import deleteCookie from '../utils/logout.js';
 
 class Header extends Component {
   onRender(dom) {
-    const logout = dom.querySelector('.log-out');
+    fetch('/api/v1/auth/verify', {
+      credentials: 'include'
+    })
+      .then(res => res.json())
+      .then(user => {
+        if(user._id) {
+          const hideLogoutButton = dom.querySelector('#logout-button');
+          hideLogoutButton.classList.remove('hidden');
+        }
+      });
+
+    const logout = dom.querySelector('#logout-button');
     logout
       .addEventListener('click', () => {
         deleteCookie('session');
@@ -16,7 +27,7 @@ class Header extends Component {
     return /*html*/`
     <header> 
     <h1>${title}<h1>
-    <button class="log-out hidden">Log Out</button>
+    <button id="logout-button" class="hidden">Log Out</button>
     </header>
     `;
   }

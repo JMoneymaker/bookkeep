@@ -45,7 +45,7 @@ class App extends Component {
     return /*html*/`
         <div>
             <!-- header goes here --> 
-            <main>
+            <main id="home-page">
                 <p class="erorrs"></p>
                 <section class="no-display" id="signup-container">
                   <p class="switch">
@@ -57,9 +57,6 @@ class App extends Component {
                   <button id="signup-button">Need to create and account?</button>
                 </p>
                 </section>
-                <p>
-                <img class="cover" src="../assets/home-page.jpg" alt="cozy reading nook">
-                </p>
             </main>
         </div>      
         `;
