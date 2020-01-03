@@ -29,13 +29,14 @@ form.standard {
     width: 100%;
     margin: 20px auto;
     padding: 20px 40px 20px 30px;
-    background: whitesmoke;
-    border: 1px solid #aaa;
+    background: #594F4D;
+    border: 3px solid #EAB999;
 }
 
 form.standard p {
     margin-top: 20px;
     margin-bottom: 20px;
+    color: #EDEBE1;
 }
 
 form.standard label, form.standard legend {
@@ -76,9 +77,9 @@ form.standard button {
     max-width: 100%;
     font-size: 1.1em;
     font-weight: bold;
-    border: 1px solid white;
-    background: steelblue;
-    color: white;
+    border: 1px solid #EDEBE1;
+    background: #EAB999;
+    color: #594F4D;
     opacity: 0.9;
     overflow: hidden;
 }

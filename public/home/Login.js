@@ -27,10 +27,7 @@ class Login extends Component {
           if(user._id) {
             window.location.href = '../bookkeep.html';
           } else {
-            const error = document.createElement('div');
-            error.innerHTML = '<p>Invalid email or password</p>';
-            form.appendChild(error);
-            if(form.children.length > 2) form.removeChild(form.lastChild);
+            alert('Invalid email/passwrod');
           }
         });
     });
