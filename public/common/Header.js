@@ -27,7 +27,7 @@ class Header extends Component {
     return /*html*/`
     <header> 
     <h1>${title}<h1>
-    <button id="logout-button" class="hidden">Log Out</button>
+    <button id="logout-button" class="hidden">logout</button>
     </header>
     `;
   }

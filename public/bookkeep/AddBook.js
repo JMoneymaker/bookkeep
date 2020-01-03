@@ -12,7 +12,7 @@ class AddBook extends Component {
   renderHTML() {
     return /*html*/`
         <div id="add-book">
-        <p>➕</p>
+        <button>new book</button>
         </div>
         `;
   }

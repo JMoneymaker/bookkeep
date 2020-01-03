@@ -38,16 +38,15 @@ class BookModal extends Component {
         <div>
             <form class="book-modal">
                 <fieldset>
-                <legend>Add a Book</legend>
+                <legend>add a book</legend>
                 <input name="title" type="text" placeholder="title" required>
                 <input name="author" type="text" placeholder="author" required>
-                <input name="add-date" type="date" placeholder="date added" required>
                 <input name="read-date" type="date" placeholder="read?">
                 <input name="genre" type="text" placeholder="genre">
                 </fieldset>
-                <button type="submit">Add</button>
-                <button type="reset">Reset</button>
-                <button type="button" onClick="window.location.href = '/bookkeep.html';">Cancel</button>
+                <button type="submit">add</button>
+                <button type="reset">reset</button>
+                <button type="button" onClick="window.location.href = '/bookkeep.html';">cancel</button>
             </form>
         </div>
         `;

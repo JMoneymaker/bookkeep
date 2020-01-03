@@ -6,8 +6,9 @@ class Book extends Component {
 
     return /*html*/`
         <div id="book-container">
-        <p>${book.title}</p>
-        <p>by ${book.author}</p>
+        <p id="title">${book.title}</p>
+        <p id="author">by ${book.author}</p>
+        <img id="cover" src="../assets/default-cover.jpeg">
         </div>
         `;
   }
