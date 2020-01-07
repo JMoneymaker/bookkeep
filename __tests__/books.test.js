@@ -5,9 +5,11 @@ const app = require('../lib/app');
 const connect = require('../lib/utils/connect');
 const mongoose = require('mongoose');
 const Book = require('../lib/models/Book');
+const Publisher = require('../lib/models/Publisher');
+let Author = require('../lib/models/Author');
 const User = require('../lib/models/User');
 
-describe('app routes', () => {
+describe('book routes', () => {
   beforeAll(() => {
     connect();
   });
@@ -16,13 +18,35 @@ describe('app routes', () => {
   });
 
   let book;
+  let publisher;
+  let author;
 
   beforeEach(async() => {
+    publisher = await Publisher
+      .create({
+        name: 'Random House',
+        address: [
+          {
+            city: 'New York',
+            state: 'New York',
+            country: 'USA'
+          }
+        ]
+      });
+
+    author = await Author
+      .create({
+        name: 'Octavia Butler'
+      });
+
     book = await Book
       .create({
+        publisherId: publisher._id,
+        authorId: author._id,
         title: 'Fledgling',
-        addDate: '2019-12-30',
-        author: 'Octavia Butler',
+        published: 2004,
+        ISBN: 'some isbn string',
+        language: 'English',
         genre: ['Sci-Fi/Fantasy']
       });
   });
@@ -47,17 +71,23 @@ describe('app routes', () => {
     return agent
       .post('/api/v1/books')
       .send({
+        publisherId: publisher._id,
+        authorId: author._id,
         title: 'Lilith\'s Brood',
-        addDate: '2019-12-30',
-        author: 'Octavia Butler',
+        published: 2004,
+        ISBN: 'some isbn string',
+        language: 'English',
         genre: ['Sci-Fi/Fantasy']
       })
       .then(res => {
         expect(res.body).toEqual({
           _id: expect.any(String),
+          publisherId: expect.any(String),
+          authorId: expect.any(String),
           title: 'Lilith\'s Brood',
-          addDate: expect.any(String),
-          author: 'Octavia Butler',
+          published: 2004,
+          ISBN: 'some isbn string',
+          language: 'English',
           genre: ['Sci-Fi/Fantasy'],
           __v: 0
         });
@@ -70,9 +100,12 @@ describe('app routes', () => {
       .then(res => {
         expect(res.body).toEqual([{
           _id: expect.any(String),
+          publisherId: expect.any(String),
+          authorId: expect.any(String),
           title: 'Fledgling',
-          addDate: expect.any(String),
-          author: 'Octavia Butler',
+          published: 2004,
+          ISBN: 'some isbn string',
+          language: 'English',
           genre: ['Sci-Fi/Fantasy'],
           __v: 0
         }]);
@@ -85,9 +118,12 @@ describe('app routes', () => {
       .then(res => {
         expect(res.body).toEqual({
           _id: expect.any(String),
+          publisherId: expect.any(String),
+          authorId: expect.any(String),
           title: 'Fledgling',
-          author: 'Octavia Butler',
-          addDate: expect.any(String),
+          published: 2004,
+          ISBN: 'some isbn string',
+          language: 'English',
           genre: ['Sci-Fi/Fantasy'],
           __v: 0
         });
@@ -111,9 +147,12 @@ describe('app routes', () => {
       .then(res => {
         expect(res.body).toEqual({
           _id: expect.any(String),
+          publisherId: expect.any(String),
+          authorId: expect.any(String),
           title: 'Bloodchild',
-          author: 'Octavia Butler',
-          addDate: expect.any(String),
+          published: 2004,
+          ISBN: 'some isbn string',
+          language: 'English',
           genre: ['Sci-Fi/Fantasy'],
           __v: 0
         });
@@ -138,9 +177,12 @@ describe('app routes', () => {
       .then(res => {
         expect(res.body).toEqual({
           _id: expect.any(String),
+          publisherId: expect.any(String),
+          authorId: expect.any(String),
           title: 'Bloodchild',
-          author: 'Octavia Butler',
-          addDate: expect.any(String),
+          published: 2004,
+          ISBN: 'some isbn string',
+          language: 'English',
           genre: ['Sci-Fi/Fantasy'],
           __v: 0
         });

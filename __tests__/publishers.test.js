@@ -6,6 +6,7 @@ const connect = require('../lib/utils/connect');
 const mongoose = require('mongoose');
 const Publisher = require('../lib/models/Publisher');
 const Book = require('../lib/models/Book');
+const Author = require('../lib/models/Author');
 
 describe('publisher routes', () => {
   beforeAll(() => {
@@ -17,6 +18,7 @@ describe('publisher routes', () => {
 
   let publisher;
   let book;
+  let author;
 
   beforeEach(async() => {
     publisher = await Publisher
@@ -31,13 +33,20 @@ describe('publisher routes', () => {
         ]
       });
 
+    author = await Author
+      .create({
+        name: 'Octavia Butler'
+      });
+
     book = await Book
       .create({
         publisherId: publisher._id,
+        authorId: author._id,
         ISBN: '978-3-16-148410-0',
         title: 'Fledgling',
         published: 2004,
       });
+
   });
 
   afterAll(() => {
