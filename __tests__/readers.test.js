@@ -22,7 +22,6 @@ describe('reader routes', () => {
   let reader;
   let publisher;
   let author;
-  let reading;
 
   beforeEach(async() => {
     
@@ -58,7 +57,7 @@ describe('reader routes', () => {
         published: 2004,
       });
 
-    reading = await Reading
+    await Reading
       .create({
         bookId: book._id,
         userId: reader._id,
@@ -113,6 +112,10 @@ describe('reader routes', () => {
         expect(res.body).toEqual({
           _id: reader.id,
           email: 'login@test.com',
+          reading: [{
+            _id: expect.any(String),
+            userId: expect.any(String),
+          }],
           __v: 0
         });
       });

@@ -95,7 +95,7 @@ describe('author routes', () => {
           id: expect.any(String),
           books: [{
             _id: book.id,
-            // publisherId: publisher.id,
+            publisherId: publisher.id,
             authorId: author.id,
             title: book.title
           }],
@@ -115,7 +115,7 @@ describe('author routes', () => {
           id: expect.any(String),
           books: [{
             _id: book.id,
-            // publisherId: publisher.id,
+            publisherId: publisher.id,
             authorId: author.id,
             title: book.title
           }],
@@ -134,7 +134,7 @@ describe('author routes', () => {
           id: expect.any(String),
           books: [{
             _id: book.id,
-            // publisherId: publisher.id,
+            publisherId: publisher.id,
             authorId: author.id,
             title: book.title
           }],
