@@ -125,5 +125,32 @@ describe('publisher routes', () => {
         });
       });
   });
+
+  it('updates a publisher by id', async() => {
+    return request(app)
+      .patch(`/api/v1/publishers/${publisher._id}`)
+      .send({ name: 'Harper Collins' })
+      .then(res => {
+        expect(res.body).toEqual({
+          _id: expect.any(String),
+          name: 'Harper Collins',
+          address: [
+            {
+              _id: expect.any(String),
+              city: 'New York',
+              state: 'New York',
+              country: 'USA'
+            }
+          ],
+          id: expect.any(String),
+          books: [{
+            _id: book.id,
+            publisherId: publisher.id,
+            title: book.title
+          }],
+          __v: 0
+        });
+      });
+  });
 });
 
