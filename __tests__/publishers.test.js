@@ -87,18 +87,19 @@ describe('publisher routes', () => {
   });
 
   it('finds all publishers', async() => {
-    const publishers = await Publisher.create([
-      {
-        name: 'Harper Collins',
-        address: [
-          {
-            city: 'New York',
-            state: 'New York',
-            country: 'USA'
-          }
-        ]
-      },
-    ]);
+    const publishers = await Publisher
+      .create([
+        {
+          name: 'Harper Collins',
+          address: [
+            {
+              city: 'New York',
+              state: 'New York',
+              country: 'USA'
+            }
+          ]
+        },
+      ]);
 
     return request(app)
       .get('/api/v1/publishers')
