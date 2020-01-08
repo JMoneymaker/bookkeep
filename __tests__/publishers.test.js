@@ -1,62 +1,15 @@
-require('dotenv').config();
+const { getPublisher, getPublishers, getBooks } = require('../lib/helpers/data-helpers');
+
+const Book = require('../lib/models/Book');
 
 const request = require('supertest');
 const app = require('../lib/app');
-const connect = require('../lib/utils/connect');
-const mongoose = require('mongoose');
-const Publisher = require('../lib/models/Publisher');
-const Book = require('../lib/models/Book');
-const Author = require('../lib/models/Author');
+
 
 describe('publisher routes', () => {
-  beforeAll(() => {
-    connect();
-  });
-  beforeEach(() => {
-    return mongoose.connection.dropDatabase();
-  });
-
-  let publisher;
-  let book;
-  let author;
-
-  beforeEach(async() => {
-    publisher = await Publisher
-      .create({
-        name: 'Random House',
-        address: [
-          {
-            city: 'New York',
-            state: 'New York',
-            country: 'USA'
-          }
-        ]
-      });
-
-    author = await Author
-      .create({
-        name: 'Octavia Butler'
-      });
-
-    book = await Book
-      .create({
-        publisherId: publisher._id,
-        authorId: author._id,
-        ISBN: '978-3-16-148410-0',
-        title: 'Fledgling',
-        published: 2004,
-      });
-
-  });
-
-  afterAll(() => {
-    return mongoose.connection.close();
-  });
 
   it('creates a publisher', () => {
-    const agent = request.agent(app);
-
-    return agent
+    return request(app)
       .post('/api/v1/publishers')
       .send({
         name: 'Random House',
@@ -87,108 +40,85 @@ describe('publisher routes', () => {
   });
 
   it('finds all publishers', async() => {
-    const publishers = await Publisher
-      .create([
-        {
-          name: 'Harper Collins',
-          address: [
-            {
-              city: 'New York',
-              state: 'New York',
-              country: 'USA'
-            }
-          ]
-        },
-      ]);
+    const publishers = await getPublishers();
 
     return request(app)
       .get('/api/v1/publishers')
       .then(res => {
         publishers.forEach(publisher => {
-          expect(res.body).toContainEqual(JSON.parse(JSON.stringify(publisher)));
+          expect(res.body).toContainEqual(publisher);
         });
       });
   });
 
   it('gets a publisher by id', async() => {
+    const publisher = await getPublisher();
+    const books = await getBooks({ publisherId: publisher._id });
+
     return request(app)
       .get(`/api/v1/publishers/${publisher._id}`)
       .then(res => {
+
+        books.forEach(book => {
+          expect(res.body.books).toContainEqual({ 
+            _id: book._id,
+            publisherId: publisher._id,
+            title: book.title 
+          });
+        }),
         expect(res.body).toEqual({
-          _id: expect.any(String),
-          name: 'Random House',
-          address: [
-            {
-              _id: expect.any(String),
-              city: 'New York',
-              state: 'New York',
-              country: 'USA'
-            }
-          ],
+          _id: publisher._id,
+          name: publisher.name,
+          address: publisher.address,
           id: expect.any(String),
-          books: [{
-            _id: book.id,
-            publisherId: publisher.id,
-            title: book.title
-          }],
+          books: expect.any(Array),
           __v: 0
         });
       });
   });
 
   it('updates a publisher by id', async() => {
+    const publisher = await getPublisher();
+    const books = await getBooks({ publisherId: publisher._id });
+
+
     return request(app)
       .patch(`/api/v1/publishers/${publisher._id}`)
       .send({ name: 'Harper Collins' })
       .then(res => {
+        books.forEach(book => {
+          expect(res.body.books).toContainEqual({ 
+            _id: book._id,
+            publisherId: publisher._id,
+            title: book.title 
+          });
+        }),
         expect(res.body).toEqual({
-          _id: expect.any(String),
+          _id: publisher._id,
           name: 'Harper Collins',
-          address: [
-            {
-              _id: expect.any(String),
-              city: 'New York',
-              state: 'New York',
-              country: 'USA'
-            }
-          ],
+          address: publisher.address,
           id: expect.any(String),
-          books: [{
-            _id: book.id,
-            publisherId: publisher.id,
-            title: book.title
-          }],
+          books: expect.any(Array),
           __v: 0
         });
       });
   });
 
   it('will delete a publisher with no books', async() => {
-    const publishers = await Publisher
-      .create([
-        {
-          name: 'Conde Naste',
-          address: [
-            {
-              city: 'New York',
-              state: 'New York',
-              country: 'USA'
-            }
-          ]
-        },
-      ]);
+    const publisher = await getPublisher();
+    await Book.deleteMany({ publisherId: publisher._id });
 
     return request(app)
-      .get('/api/v1/publishers')
+      .delete(`/api/v1/publishers/${publisher._id}`)
       .then(res => {
-        publishers.forEach(publisher => {
-          expect(res.body).toContainEqual(JSON.parse(JSON.stringify(publisher)));
-        });
+        expect(res.body).toEqual(publisher);
       });
   });
 
 
-  it('does not delete a publisher that has books', () => {
+  it('does not delete a publisher that has books', async() => {
+    const publisher = await getPublisher();
+
     return request(app)
       .delete(`/api/v1/publishers/${publisher._id}`)
       .then(res => {
