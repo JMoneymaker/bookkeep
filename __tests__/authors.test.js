@@ -1,4 +1,4 @@
-const { getPublisher, getPublishers, getBooks, getAuthor, getAuthors } = require('../lib/helpers/data-helpers');
+const { getBooks, getAuthor, getAuthors } = require('../lib/helpers/data-helpers');
 
 const request = require('supertest');
 const app = require('../lib/app');
@@ -37,7 +37,7 @@ describe('author routes', () => {
       });
   });
 
-  it('gets and author by id', async() => {
+  it('gets an author by id', async() => {
     const author = await getAuthor();
     const books = await getBooks({ authorId: author._id });
 
