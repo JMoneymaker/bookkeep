@@ -1,4 +1,4 @@
-const { getPublisher, getBook, getAuthor, getUser, getReading, getReadings } = require('../lib/helpers/data-helpers');
+const { getBook, getUser, getReading, getReadings } = require('../lib/helpers/data-helpers');
 
 const request = require('supertest');
 const app = require('../lib/app');
