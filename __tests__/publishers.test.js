@@ -163,29 +163,37 @@ describe('publisher routes', () => {
       });
   });
 
-  it('deletes a publisher by id', async() => {
-    return request(app)
-      .delete(`/api/v1/publishers/${publisher._id}`)
-      .then(res => {
-        expect(res.body).toEqual({
-          _id: expect.any(String),
-          name: 'Random House',
+  it('will delete a publisher with no books', async() => {
+    const publishers = await Publisher
+      .create([
+        {
+          name: 'Conde Naste',
           address: [
             {
-              _id: expect.any(String),
               city: 'New York',
               state: 'New York',
               country: 'USA'
             }
-          ],
-          id: expect.any(String),
-          books: [{
-            _id: book.id,
-            publisherId: publisher.id,
-            title: book.title
-          }],
-          __v: 0
+          ]
+        },
+      ]);
+
+    return request(app)
+      .get('/api/v1/publishers')
+      .then(res => {
+        publishers.forEach(publisher => {
+          expect(res.body).toContainEqual(JSON.parse(JSON.stringify(publisher)));
         });
+      });
+  });
+
+
+  it('does not delete a publisher that has books', () => {
+    return request(app)
+      .delete(`/api/v1/publishers/${publisher._id}`)
+      .then(res => {
+        expect(res.body.message).toEqual(
+          'This publisher has books and cannot be deleted.');
       });
   });
 });

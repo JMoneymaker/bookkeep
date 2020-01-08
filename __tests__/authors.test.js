@@ -124,22 +124,28 @@ describe('author routes', () => {
       });
   });
 
-  it('deletes an author by id', async() => {
+  it('will delete an author with no books', async() => {
+    const authors = await Author
+      .create([{
+        name: 'Anne Lecke'
+      }]);
+
+    return request(app)
+      .get('/api/v1/authors')
+      .then(res => {
+        authors.forEach(author => {
+          expect(res.body).toContainEqual(JSON.parse(JSON.stringify(author)));
+        });
+      });
+  });
+
+
+  it('does not delete a publisher that has books', () => {
     return request(app)
       .delete(`/api/v1/authors/${author._id}`)
       .then(res => {
-        expect(res.body).toEqual({
-          _id: expect.any(String),
-          name: 'Octavia Butler',
-          id: expect.any(String),
-          books: [{
-            _id: book.id,
-            publisherId: publisher.id,
-            authorId: author.id,
-            title: book.title
-          }],
-          __v: 0
-        });
+        expect(res.body.message).toEqual(
+          'This author has books and cannot be deleted.');
       });
   });
 });
