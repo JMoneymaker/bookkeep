@@ -1,10 +1,9 @@
 const { getPublisher, getPublishers, getBooks } = require('../lib/helpers/data-helpers');
 
-const Book = require('../lib/models/Book');
-
 const request = require('supertest');
 const app = require('../lib/app');
 
+const Book = require('../lib/models/Book');
 
 describe('publisher routes', () => {
 
@@ -58,7 +57,6 @@ describe('publisher routes', () => {
     return request(app)
       .get(`/api/v1/publishers/${publisher._id}`)
       .then(res => {
-
         books.forEach(book => {
           expect(res.body.books).toContainEqual({ 
             _id: book._id,

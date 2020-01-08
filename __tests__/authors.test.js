@@ -1,56 +1,11 @@
-require('dotenv').config();
+const { getPublisher, getPublishers, getBooks, getAuthor, getAuthors } = require('../lib/helpers/data-helpers');
 
 const request = require('supertest');
 const app = require('../lib/app');
-const connect = require('../lib/utils/connect');
-const mongoose = require('mongoose');
-const Author = require('../lib/models/Author');
+
 const Book = require('../lib/models/Book');
-const Publisher = require('../lib/models/Publisher');
 
 describe('author routes', () => {
-  beforeAll(() => {
-    connect();
-  });
-  beforeEach(() => {
-    return mongoose.connection.dropDatabase();
-  });
-
-  let author;
-  let book;
-  let publisher;
-
-  beforeEach(async() => {
-    publisher = await Publisher
-      .create({
-        name: 'Random House',
-        address: [
-          {
-            city: 'New York',
-            state: 'New York',
-            country: 'USA'
-          }
-        ]
-      });
-    
-    author = await Author
-      .create({
-        name: 'Octavia Butler'
-      });
-
-    book = await Book
-      .create({
-        publisherId: publisher._id,
-        authorId: author._id,
-        ISBN: 'some isbn string',
-        title: 'Fledgling',
-        published: 2004,
-      });
-  });
-
-  afterAll(() => {
-    return mongoose.connection.close();
-  });
 
   it('creates an author', () => {
     const agent = request.agent(app);
@@ -71,76 +26,87 @@ describe('author routes', () => {
   });
 
   it('finds all authors', async() => {
-    const authors = await Author
-      .create([{
-        name: 'N.K. Jemisin'
-      }]);
+    const authors = await getAuthors();
 
     return request(app)
       .get('/api/v1/authors')
       .then(res => {
         authors.forEach(author => {
-          expect(res.body).toContainEqual(JSON.parse(JSON.stringify(author)));
+          expect(res.body).toContainEqual(author);
         });
       });
   });
 
   it('gets and author by id', async() => {
+    const author = await getAuthor();
+    const books = await getBooks({ authorId: author._id });
+
     return request(app)
       .get(`/api/v1/authors/${author._id}`)
       .then(res => {
+        books.forEach(book => {
+          expect(res.body.books).toContainEqual({
+            _id: book._id,
+            authorId: author._id,
+            publisherId: expect.any(String),
+            title: book.title 
+          });
+        });
         expect(res.body).toEqual({
-          _id: expect.any(String),
-          name: 'Octavia Butler',
+          _id: author._id,
+          name: author.name,
+          pob: author.pob,
+          dob: author.dob,
           id: expect.any(String),
-          books: [{
-            _id: book.id,
-            publisherId: publisher.id,
-            authorId: author.id,
-            title: book.title
-          }],
+          books: expect.any(Array),
           __v: 0
         });
       });
   });
 
   it('updates an author by id', async() => {
+    const author = await getAuthor();
+    const books = await getBooks({ authorId: author._id });
+
     return request(app)
       .patch(`/api/v1/authors/${author._id}`)
       .send({ name: 'N.K. Jemisin' })
       .then(res => {
+        books.forEach(book => {
+          expect(res.body.books).toContainEqual({
+            _id: book._id,
+            authorId: author._id,
+            publisherId: expect.any(String),
+            title: book.title 
+          });
+        });
         expect(res.body).toEqual({
-          _id: expect.any(String),
+          _id: author._id,
           name: 'N.K. Jemisin',
+          pob: author.pob,
+          dob: author.dob,
           id: expect.any(String),
-          books: [{
-            _id: book.id,
-            publisherId: publisher.id,
-            authorId: author.id,
-            title: book.title
-          }],
+          books: expect.any(Array),
           __v: 0
         });
       });
   });
 
   it('will delete an author with no books', async() => {
-    const authors = await Author
-      .create([{
-        name: 'Anne Lecke'
-      }]);
+    const author = await getAuthor();
+    await Book.deleteMany({ authorId: author._id });
 
     return request(app)
       .get('/api/v1/authors')
       .then(res => {
-        authors.forEach(author => {
-          expect(res.body).toContainEqual(JSON.parse(JSON.stringify(author)));
-        });
+        expect(res.body).toContainEqual(author);
       });
   });
 
 
-  it('does not delete a publisher that has books', () => {
+  it('does not delete a publisher that has books', async() => {
+    const author = await getAuthor();
+
     return request(app)
       .delete(`/api/v1/authors/${author._id}`)
       .then(res => {
