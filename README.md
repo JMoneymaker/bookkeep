@@ -1,4 +1,4 @@
-#LAB: Full Application
+#LAB: Full Application *AND* Ripe Banana
 ####Build a full back-end application
 
 ##Requirements
