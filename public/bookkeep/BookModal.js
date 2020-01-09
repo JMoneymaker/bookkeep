@@ -14,7 +14,7 @@ class BookModal extends Component {
         genre: formData.get('genre')
       };
 
-      fetch('/api/v1/books', {
+      fetch('https://sheltered-everglades-06931.herokuapp.com//api/v1/books', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
