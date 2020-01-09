@@ -14,7 +14,7 @@ class BookModal extends Component {
         genre: formData.get('genre')
       };
 
-      fetch('https://sheltered-everglades-06931.herokuapp.com//api/v1/books', {
+      fetch('/api/v1/books', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -41,7 +41,7 @@ class BookModal extends Component {
                 <legend>add a book</legend>
                 <input name="title" type="text" placeholder="title" required>
                 <input name="author" type="text" placeholder="author" required>
-                <input name="read-date" type="date" placeholder="read?">
+                <input name="add-date" type="date">
                 <input name="genre" type="text" placeholder="genre">
                 </fieldset>
                 <button type="submit">add</button>
