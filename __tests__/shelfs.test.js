@@ -1,4 +1,4 @@
-const { getBook, getUser, getReading, getReadings } = require('../lib/helpers/data-helpers');
+const { getBook, getUser, getShelf, getShelfs } = require('../lib/helpers/data-helpers');
 
 const request = require('supertest');
 const app = require('../lib/app');
@@ -11,7 +11,7 @@ describe('reading routes', () => {
     const agent = request.agent(app);
 
     return agent
-      .post('/api/v1/readings')
+      .post('/api/v1/shelfs')
       .send({
         bookId: book._id,
         userId: user._id,
@@ -31,49 +31,49 @@ describe('reading routes', () => {
       });
   });
 
-  it('gets all readings', async() => {
-    const readings = await getReadings();
+  it('gets all shelfs', async() => {
+    const shelfs = await getShelfs();
 
     return request(app)
-      .get('/api/v1/readings')
+      .get('/api/v1/shelfs')
       .then(res => {
-        readings.forEach(reading => {
-          expect(res.body).toContainEqual(reading);
+        shelfs.forEach(shelf => {
+          expect(res.body).toContainEqual(shelf);
         });
       });
   });
 
   it('gets a reading by id', async() => {
-    const reading = await getReading();
+    const shelf = await getShelf();
 
     return request(app)
-      .get(`/api/v1/readings/${reading._id}`)
+      .get(`/api/v1/shelfs/${shelf._id}`)
       .then(res => {
         expect(res.body).toEqual({
           _id: expect.any(String),
-          bookId: reading.bookId,
-          userId: reading.userId,
-          dateAdded: reading.dateAdded,
-          rating: reading.rating,
+          bookId: shelf.bookId,
+          userId: shelf.userId,
+          dateAdded: shelf.dateAdded,
+          rating: shelf.rating,
           __v: 0
         });
       });
   });
 
-  it('updates a reading', async() => {
-    const reading = await getReading();
+  it('updates a shelf', async() => {
+    const shelf = await getShelf();
 
     return request(app)
-      .patch(`/api/v1/readings/${reading._id}`)
+      .patch(`/api/v1/shelfs/${shelf._id}`)
       .send({ dateRead: '2020-01-07T19:35:05.083Z' })
       .then(res => {
         expect(res.body).toEqual({
           _id: expect.any(String),
-          bookId: reading.bookId,
-          userId: reading.userId,
-          dateAdded: reading.dateAdded,
+          bookId: shelf.bookId,
+          userId: shelf.userId,
+          dateAdded: shelf.dateAdded,
           dateRead: '2020-01-07T19:35:05.083Z',
-          rating: reading.rating,
+          rating: shelf.rating,
           __v: 0  
         });
       });
@@ -81,12 +81,12 @@ describe('reading routes', () => {
 
 
   it('deletes a reading by id', async() => {
-    const reading = await getReading();
+    const shelf = await getShelf();
 
     return request(app)
-      .delete(`/api/v1/readings/${reading._id}`)
+      .delete(`/api/v1/shelfs/${shelf._id}`)
       .then(res => {
-        expect(res.body).toEqual(reading);
+        expect(res.body).toEqual(shelf);
       });
   });
 });
