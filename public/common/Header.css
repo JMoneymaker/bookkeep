@@ -1,0 +1,23 @@
+@import url('https://fonts.googleapis.com/css?family=Heebo|Oswald');
+
+header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    color: orange;
+    padding: 2vw;
+}
+
+#logout-button {
+    background-color: #252735;
+    color: orange;
+    font-family: 'Heebo', "Segoe UI", Candara, "Bitstream Vera Sans", "DejaVu Sans", "Bitstream Vera Sans", "Trebuchet MS", Verdana, "Verdana Ref", sans-serif;
+    font-size: 16px;
+    border: none;
+    border-radius: .25rem;
+}
+
+#logout-button:hover {
+    background-color: orange;
+    color: #252735;
+}
