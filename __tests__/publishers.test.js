@@ -1,4 +1,4 @@
-const { getPublisher, getPublishers, getBooks } = require('../lib/helpers/data-helpers');
+const { getPublisher, getPublishers, getBooks, getBook } = require('../lib/helpers/data-helpers');
 
 const request = require('supertest');
 const app = require('../lib/app');
@@ -58,7 +58,7 @@ describe('publisher routes', () => {
       .get(`/api/v1/publishers/${publisher._id}`)
       .then(res => {
         books.forEach(book => {
-          expect(res.body.books).toContainEqual({ 
+          expect(res.body.book).toContainEqual({ 
             _id: book._id,
             publisherId: publisher._id,
             title: book.title 
@@ -69,7 +69,7 @@ describe('publisher routes', () => {
           name: publisher.name,
           address: publisher.address,
           id: expect.any(String),
-          books: expect.any(Array),
+          book: expect.any(Array),
           __v: 0
         });
       });
@@ -85,7 +85,7 @@ describe('publisher routes', () => {
       .send({ name: 'Harper Collins' })
       .then(res => {
         books.forEach(book => {
-          expect(res.body.books).toContainEqual({ 
+          expect(res.body.book).toContainEqual({ 
             _id: book._id,
             publisherId: publisher._id,
             title: book.title 
@@ -96,7 +96,7 @@ describe('publisher routes', () => {
           name: 'Harper Collins',
           address: publisher.address,
           id: expect.any(String),
-          books: expect.any(Array),
+          book: expect.any(Array),
           __v: 0
         });
       });
@@ -115,7 +115,8 @@ describe('publisher routes', () => {
 
 
   it('does not delete a publisher that has books', async() => {
-    const publisher = await getPublisher();
+    const book = await getBook();
+    const publisher = await getPublisher({ _id: book.publisherId });
 
     return request(app)
       .delete(`/api/v1/publishers/${publisher._id}`)

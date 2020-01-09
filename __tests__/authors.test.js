@@ -1,4 +1,4 @@
-const { getBooks, getAuthor, getAuthors } = require('../lib/helpers/data-helpers');
+const { getBooks, getBook, getAuthor, getAuthors } = require('../lib/helpers/data-helpers');
 
 const request = require('supertest');
 const app = require('../lib/app');
@@ -45,7 +45,7 @@ describe('author routes', () => {
       .get(`/api/v1/authors/${author._id}`)
       .then(res => {
         books.forEach(book => {
-          expect(res.body.books).toContainEqual({
+          expect(res.body.book).toContainEqual({
             _id: book._id,
             authorId: author._id,
             publisherId: expect.any(String),
@@ -58,7 +58,7 @@ describe('author routes', () => {
           pob: author.pob,
           dob: author.dob,
           id: expect.any(String),
-          books: expect.any(Array),
+          book: expect.any(Array),
           __v: 0
         });
       });
@@ -73,7 +73,7 @@ describe('author routes', () => {
       .send({ name: 'N.K. Jemisin' })
       .then(res => {
         books.forEach(book => {
-          expect(res.body.books).toContainEqual({
+          expect(res.body.book).toContainEqual({
             _id: book._id,
             authorId: author._id,
             publisherId: expect.any(String),
@@ -86,7 +86,7 @@ describe('author routes', () => {
           pob: author.pob,
           dob: author.dob,
           id: expect.any(String),
-          books: expect.any(Array),
+          book: expect.any(Array),
           __v: 0
         });
       });
@@ -105,7 +105,8 @@ describe('author routes', () => {
 
 
   it('does not delete a publisher that has books', async() => {
-    const author = await getAuthor();
+    const book = await getBook();
+    const author = await getAuthor({ _id: book.authorId });
 
     return request(app)
       .delete(`/api/v1/authors/${author._id}`)
