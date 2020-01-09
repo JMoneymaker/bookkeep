@@ -1,4 +1,4 @@
-const { getBooks, getAuthor, getAuthors } = require('../lib/helpers/data-helpers');
+const { getBooks, getBook, getAuthor, getAuthors } = require('../lib/helpers/data-helpers');
 
 const request = require('supertest');
 const app = require('../lib/app');
@@ -105,7 +105,8 @@ describe('author routes', () => {
 
 
   it('does not delete a publisher that has books', async() => {
-    const author = await getAuthor();
+    const book = await getBook();
+    const author = await getAuthor({ _id: book.authorId });
 
     return request(app)
       .delete(`/api/v1/authors/${author._id}`)
